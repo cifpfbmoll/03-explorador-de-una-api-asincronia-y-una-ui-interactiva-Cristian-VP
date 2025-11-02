@@ -1,0 +1,27 @@
+@use '@angular/material' as mat;
+
+/*
+  Usar un mapa simple en vez de funciones SASS que pueden no existir
+  en la versión instalada. Esto genera las variables y estilos de Material
+  para la clase .theme--light.
+*/
+/* Use `mat.define-light-theme` to produce a proper theme object that
+   the `all-component-themes` mixin expects. We pass the typography map
+   inline because `mat.define-typography-config` may not be available. */
+/* Usar un mapa compatible con `mat.theme` (mixin) para generar las
+   variables del sistema. `mat.theme` acepta un mapa con keys color,
+   typography y density. */
+$my-theme: (
+  color: (
+    primary: mat.$rose-palette,
+  ),
+  typography: (
+    font-family: 'Momo Trust Display, Roboto, "Helvetica Neue", Arial, sans-serif'
+  ),
+  density: 0,
+);
+
+.theme--light {
+  @include mat.theme($my-theme);
+}
+
