@@ -1,31 +1,75 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/NJ448ipO)
-# 03- Explorador de una API asincronia y una UI interactiva
+# Mastodoneando
 
-- **Descripción del Proyecto**: Una aplicación web que permite a los usuarios buscar y explorar una API pública. Incluye una interfaz simple para ingresar consultas de búsqueda, mostrar resultados en tarjetas, y manejar estados como carga, errores o resultados vacíos. Esto es similar al cliente de Reddit que vimos en clase, pero enfocado en la API de GitHub (o lo que surja) para practicar conceptos como solicitudes HTTP y manejo de datos asíncronos.
-- **Objetivo**: Ampliar el conocimiento básico de Angular, idealmente para reforzar habilidades en frontend development, API integration y gestión de estado reactivo usando signals.
-- **Requisitos Técnicos**:
-  - **Framework**: Angular ~20.3.0, con énfasis en módulos standalone para componentes reutilizables.
-  - **Características Principales**: Utiliza signals para actualizaciones reactivas, servicios para lógica de negocio, y plantillas Angular para UI dinámica. Añade `HttpClientModule` para manejar solicitudes API.
-  - **Dependencias**: Mantiene paquetes como `@angular/core` y `rxjs`; incluye `@angular/common/http` para API calls. Usa versiones compatibles con el proyecto actual para evitar conflictos.
-  - **API**: GitHub API REST (e.g., `https://api.github.com/search/repositories`), que es gratuita y no requiere autenticación para consultas públicas. Las opciones son diversas: Spotify, Facebook, Instagram, TikTok, Shazam, Youtube, Codewars, etc. Como hemos visto en clase, y por aportación unánime, también podréis utilizar API de Guild Wars 2 o League of Legends.
-- **Estructura del Proyecto**:
-  - **Componentes**: Incluye un componente principal como `repo-list.component.ts` (similar a [subreddit-column.component.ts](/reddit-client/src/app/components/subreddit-column.component.ts:0:0-0:0)), con subcomponentes para detalles de repositorios. Añade un `search-bar.component.ts` para la entrada de usuario.
-  - **Servicios**: Un `github.service.ts` (por ejemplo) que encapsula llamadas API, con métodos como `searchRepositories(query: string)` para devolver datos en formato observable.
-  - **Plantillas**: Usa directivas como `@if`, `@for` y eventos para una UI interactiva, con estilos CSS para una apariencia moderna (p. ej., usando clases como `column`, `loading`).
-- **Detalles de la API**: Debes usar, por ejemplo, el endpoint `GET /search/repositories` con parámetros como `q` para la consulta. Ejemplo de llamada: `this.http.get('https://api.github.com/search/repositories', { params: { q: query } })`. Enfatiza el manejo de errores HTTP (e.g., códigos 403 para límites de tasa) y la transformación de respuestas.
-- **Características Adicionales**: Para enriquecer el proyecto, sugiero agregar:
-  - Filtrado de repositorios (por ejemplo por lenguaje o estrellas). La mayoría de APIs que os proprongo tienen algún sistema similar.
-  - Un componente para mostrar detalles de la información al hacer clic.
-  - Integración con notificaciones usando signals para actualizaciones en tiempo real.
- 
-  # Formato de entrega:
+Explorador educativo de la API de Mastodon que permite buscar y visualizar posts por hashtag. Este proyecto demuestra cómo realizar llamadas asíncronas a una API REST y construir una interfaz de usuario interactiva y reactiva con Angular.
 
-  - Vuestra propuesta de proyecto y documentación del mismo.
-  - Para la generación de la documentación está permitida el uso (pero no el abuso) de algunas IAs siempre y cuando reviséis lo que entregáis.
-  - El código fuente del proyecto en este repo.
-  - Algunas imágenes del funcionamiento de vuestro proyecto en local o en github pages (esto último es totalmente voluntario).
- 
- # Fecha de entrega
+## Descripción del Proyecto
 
-  - El lunes 3 de noviembre a las 23:59 h.
-  - Tened en cuenta la penalización establecida como es habitual.
+ La aplicación permite a los usuarios buscar posts de Mastodon introduciendo un hashtag, y visualizar los resultados en una galería de posts.
+
+### Consulta
+
+La aplicación consulta la API pública de Mastodon (específicamente la instancia mastodon.social) utilizando el endpoint `GET /api/v1/timelines/tag/:hashtag`. Cuando un usuario introduce un hashtag (por ejemplo, "cats", "nature" o "photography"), la aplicación:
+
+1. Realiza una petición HTTP a la API de Mastodon
+2. Filtra los posts para mostrar únicamente aquellos que contienen imágenes
+3. Presenta los 10 primeros resultados en una galería visualmente atractiva
+4. Muestra información relevante de cada post: autor, avatar, contenido, imagen y estadísticas
+
+## API Externa
+- **Mastodon API**: API REST pública de Mastodon (https://docs.joinmastodon.org/methods/timelines/#tag)
+- **Endpoint utilizado**: `/api/v1/timelines/tag/:hashtag`
+- **Instancia**: mastodon.social
+
+## Componentes
+
+**App (Componente Principal)**
+- Orquesta la comunicación entre el componente de búsqueda y la galería de posts
+- Gestiona el estado global usando signals: `posts`, `loading` y `error`
+- Inyecta el servicio MastodonService para realizar las consultas a la API
+- Implementa manejo de estados (carga, error, vacío) para mejorar la experiencia de usuario
+
+**SearchBox (Componente de Búsqueda)**
+- Proporciona un input de texto para introducir el hashtag
+- Emite eventos cuando el usuario realiza una búsqueda (Enter o botón)
+- Utiliza two-way binding con `[(ngModel)]` para capturar el input del usuario
+- Integrado en el sidebar izquierdo del layout
+
+**Post (Componente de Tarjeta)**
+- Recibe los datos de un post individual mediante `input()` signals
+- Muestra la información del autor (avatar, nombre, username)
+- Renderiza la imagen del post con su descripción alternativa
+- Presenta el contenido HTML del post de forma segura
+- Muestra estadísticas de interacción (favoritos y reblogs)
+
+### Servicios
+
+**MastodonService**
+- Encapsula toda la lógica de comunicación con la API de Mastodon
+- Método `getPostsByHashtag(hashtag: string)`: Consulta posts por hashtag
+- Implementa filtrado para mostrar solo posts con imágenes
+- Utiliza operadores RxJS (`map`) para transformar los datos recibidos
+- Retorna Observables para permitir suscripciones reactivas
+- Configura la instancia base como `mastodon.social`
+
+
+**Variables CSS y Material Design 3**
+- `_variables.scss`: Define tokens de diseño reutilizables (fuentes, espaciados, radios)
+- `_theme.scss`: Configura el tema de Angular Material con paletas de color y tipografía
+- Uso de variables CSS del sistema Material (`--mat-sys-surface`, `--mat-sys-primary`, etc.)
+
+## Resultados
+
+
+### Interfaz Principal
+![Captura de la interfaz principal](./screenshoots/home.png)
+*Vista general de la aplicación con el layout de tres columnas y el componente de búsqueda*
+
+### Loading
+![Ejemplo de búsqueda](./screenshoots/loading_post.png)
+*Búsqueda realizada con el hashtag "art" mostrando el mensaje de Loading mientras carga*
+
+### Galeria de Post
+![Detalle de un post](./screenshoots/post_gallery.png)
+*Galería cargada con los post traidos de la API con el hashtag art*
+
+
