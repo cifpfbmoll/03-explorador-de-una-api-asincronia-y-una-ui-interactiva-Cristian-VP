@@ -5,24 +5,59 @@
     gap: 1rem;
     align-items: start;
     min-height: 100vh;
+    padding: 1rem;
 }
 
 .sidebar-left {
-    padding: 2rem;
     grid-area: left;
-    background-color: lightcoral;
+    background-color: var(--mat-sys-surface-container);
+    border-radius: var(--app-border-radius, 8px);
+    min-height: 200px;
 }
 
 .sidebar-right {
-    padding: 2rem;
     grid-area: right;
-    background-color: lightblue;
+    background-color: var(--mat-sys-surface-container);
+    border-radius: var(--app-border-radius, 8px);
+    padding: 1rem;
+    min-height: 200px;
 }
 
 .post-container {
-    grid-row: center;
-    padding: 2rem;
-    background-color: lightgray;
+    grid-area: center;
+    padding: 1rem;
 }
 
+.loading-message,
+.error-message,
+.empty-message {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.125rem;
+}
+
+.loading-message {
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.error-message {
+    color: var(--mat-sys-error);
+    background: var(--mat-sys-error-container);
+    border-radius: var(--app-border-radius, 8px);
+}
+
+.empty-message {
+    color: var(--mat-sys-on-surface-variant);
+    font-style: italic;
+}
+
+@media (max-width: 900px) {
+    .layout-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "left"
+            "center"
+            "right";
+    }
+}
 

@@ -1,14 +1,34 @@
 
 <body class="layout-grid">
   <aside class="sidebar-left">
-    <nav class="nav-placeholder">Menú / filtros</nav>
+    <app-search-box (search)="onSearch($event)" />
   </aside>
 
   <main class="post-container">
-    <section class="posts-placeholder">Zona principal de posts</section>
+    @if (loading()) {
+      <div class="loading-message">Cargando posts...</div>
+    }
+    
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+    
+    @if (!loading() && posts().length === 0 && !error()) {
+      <div class="empty-message">
+        Busca posts por hashtag (ej: cats, nature, art)
+      </div>
+    }
+    
+    @for (post of posts(); track post.id) {
+      <app-post [post]="post" />
+    }
   </main>
 
   <aside class="sidebar-right">
-    <div class="widgets-placeholder">Widgets / info</div>
+    <div class="widgets-placeholder">
+      @if (posts().length > 0) {
+        <p>{{ posts().length }} posts encontrados</p>
+      }
+    </div>
   </aside>
 </body>

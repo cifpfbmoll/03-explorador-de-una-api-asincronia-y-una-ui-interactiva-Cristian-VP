@@ -1,0 +1,15 @@
+<div class="search-box">
+  <input 
+    type="text" 
+    [(ngModel)]="hashtag"
+    placeholder="Hashtag (ej: cats)"
+    (keyup.enter)="onSearch()"
+    class="search-input"
+  />
+  <button 
+    (click)="onSearch()"
+    class="search-button"
+  >
+    Buscar
+  </button>
+</div>

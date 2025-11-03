@@ -1,1 +1,28 @@
-<p>post works!</p>
+<article class="post-card">
+  <div class="post-header">
+    <img 
+      [src]="post().account.avatar" 
+      [alt]="post().account.display_name"
+      class="avatar"
+    />
+    <div class="user-info">
+      <strong class="display-name">{{ post().account.display_name }}</strong>
+      <span class="username">@{{ post().account.acct }}</span>
+    </div>
+  </div>
+
+  @if (getFirstImage(); as image) {
+    <img 
+      [src]="image.url" 
+      [alt]="image.description || 'Post image'"
+      class="post-image"
+    />
+  }
+
+  <div class="post-content" [innerHTML]="post().content"></div>
+
+  <div class="post-stats">
+    <span>❤️ {{ post().favourites_count }}</span>
+    <span>🔁 {{ post().reblogs_count }}</span>
+  </div>
+</article>
